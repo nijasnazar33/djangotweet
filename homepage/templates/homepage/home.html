@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DjangoTweet</title>
+</head>
+<body>
+<h1>Welcome to the DjangoTweet Homepage</h1>
+<form action="{% url 'homepage:tweet' %}" , method="post">
+    {% csrf_token %}
+    <input type="text" name="tweet" size="140">
+    <input type="submit" value="Tweet">
+</form>
+{% if tweeted%}
+<p>You tweeted: '<strong>{{ tweeted }}</strong>'</p>
+{% endif %}
+<hr>
+{% for tweet in all_tweets %}
+    <p><strong>{{ tweet.tweet_op.user_name }}</strong></p>
+    <a href="https://twitter.com/{{ tweet.tweet_op.screen_name }}" target="_blank"><img src="{{ tweet.tweet_op.profile_pic }}"></a>
+    <p>Followers: <strong>{{ tweet.tweet_op.followers }}</strong></p>
+    {% if tweet.tweet_type == 'URL' %}
+        <a href="{{ tweet.tweet_text_url }}" target="_blank">{{ tweet.tweet_text_url }}</a>
+    {% elif tweet.tweet_type == 'URL_TWT' %}
+        <a href="{{ tweet.tweet_text_url }}" target="_blank">{{ tweet.tweet_text_url }}</a>
+        <p>{{ tweet.tweet_text }}</p>
+    {% elif tweet.tweet_type == 'TWT' %}
+        <p>{{ tweet.tweet_text }}</p>
+    {% elif tweet.tweet_type == 'TWT_URL' %}
+        <p>{{ tweet.tweet_text }}</p>
+        <a href="{{ tweet.tweet_text_url }}" target="_blank">{{ tweet.tweet_text_url }}</a>
+    {% elif tweet.tweet_type == 'TWT_URL_TWT' %}
+        <p>{{ tweet.tweet_text }}</p>
+        <a href="{{ tweet.tweet_text_url }}" target="_blank">{{ tweet.tweet_text_url }}</a>
+        <p>{{ tweet.tweet_text2 }}</p>
+    {% endif %}
+    <p>Retweets: {{ tweet.retweets }} | Favorites: {{ tweet.favourites }}</p>
+    <hr>
+{% endfor %}
+<a href="{% url 'homepage:home' %}">Refresh</a>
+<p>developed by nijas</p>
+</body>
+</html>
