@@ -1,5 +1,6 @@
 from operator import attrgetter
 
+import sys
 from django.shortcuts import render
 from twitter import Twitter, OAuth
 from .models import User, Tweet
@@ -18,13 +19,13 @@ def homepage(request):
     for tweet_items in t_home_timeline:
         save_tweet_flag = 0
         save_user_flag = 0
-        user_id = 0
+        user_id = ''
         user_name = ''
         screen_name = ''
         profile_pic_norm = ''
-        followers_count = 0
+        followers_count = ''
         created_at = ''
-        tweet_id = 0
+        tweet_id = ''
         tweet_text1 = ''
         tweet_text2 = ''
         tweet_text_link = ''
@@ -35,14 +36,18 @@ def homepage(request):
         for item in tweet_items.items():
             if item[0] == 'created_at':
                 created_at = item[1]
-            elif item[0] == 'id':
+            elif item[0] == 'id_str':
                 tweet_id = item[1]
                 try:
                     get_tweet = Tweet.objects.get(tweet_id=tweet_id)
                     save_tweet_flag = 0
                     # break
-                except Tweet.DoesNotExist:
+                # except Tweet.DoesNotExist:
+                except:
                     save_tweet_flag = 1
+                    # return render(request, 'homepage/error_check.html',
+                    #               context={'error_vallue': sys.exc_info()[0]})
+
             elif item[0] == 'text':
                 tweet_text_raw = item[1]
                 check_link = tweet_text_raw.find('http')
@@ -74,16 +79,17 @@ def homepage(request):
                         tweet_text2 = tweet_text2_and_link[1]
                         tweet_text_link = 'http' + tweet_text2_and_link[0]
             elif item[0] == 'user':
-                user_id = item[1]['id']
+                user_id = item[1]['id_str']
                 user_name = item[1]['name']
                 screen_name = item[1]['screen_name']
                 profile_pic_norm = item[1]['profile_image_url_https']
                 # profile_pic = ''.join(profile_pic_norm.split(sep='_normal'))
-                followers_count = item[1]['followers_count']
+                followers_count = str(item[1]['followers_count'])
                 try:
                     get_user = User.objects.get(user_id=user_id)
                     save_user_flag = 0
-                except User.DoesNotExist:
+                # except User.DoesNotExist:
+                except:
                     save_user_flag = 1
             elif item[0] == 'retweet_count':
                 retweets = item[1]
@@ -94,7 +100,7 @@ def homepage(request):
             s = User(user_id=user_id, screen_name=screen_name, user_name=user_name, profile_pic=profile_pic_norm,
                      followers=followers_count)
             s.save()
-        elif save_user_flag == 0 and user_id != 0:
+        elif save_user_flag == 0 and user_id != '':
             s = get_user
             s.followers = followers_count
             s.save()
@@ -104,7 +110,7 @@ def homepage(request):
                        tweet_text2=tweet_text2, tweet_text_url=tweet_text_link, retweets=retweets, favourites=favorite,
                        created_at=created_at)
             t2.save()
-        elif save_tweet_flag == 0 and tweet_id != 0:
+        elif save_tweet_flag == 0 and tweet_id != '':
             get_tweet.retweets = retweets
             get_tweet.favourites = favorite
             get_tweet.save()

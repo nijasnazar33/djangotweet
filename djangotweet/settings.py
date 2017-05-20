@@ -27,7 +27,7 @@ SECRET_KEY = '%vyqsyhx@eg5a8=r0*)y^7_z8b!_8x%j7ttv#52p*kwfl+)trh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['nidjangos-twit.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
