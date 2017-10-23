@@ -6,9 +6,9 @@ from twitter import Twitter, OAuth
 from .models import User, Tweet
 
 token = '2963340618-4Wm7Ke69lIO1OI40uAQt2keQHzCpIkytvz2qISL'
-token_secret = 'TxVYfJPDKNzQs2T5TcdPkr82kKTymGFhZpYxi7uZKl1In'
+token_secret = '123456789'
 consumer_key = 'U3Z85uVP2lj7mAE4aSv5eulfn'
-consumer_secret = 'tn0JFj8znccQzQSwY4WsAGWXQixmY9AstOG9uRxoVTnYnxU7jD'
+consumer_secret = '123456789'
 twitter_auth = OAuth(token=token, token_secret=token_secret, consumer_key=consumer_key,
                      consumer_secret=consumer_secret)
 t_conn = Twitter(auth=twitter_auth)
